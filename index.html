@@ -1,0 +1,1493 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#141414" />
+    <title>WeddingFlix | Our Love Story</title>
+    <style>
+      :root {
+        --red: #e50914;
+        --bg: #141414;
+        --panel: #202020;
+        --muted: #bdbdbd;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--bg);
+        color: #fff;
+        font-family: Arial, Helvetica, sans-serif;
+        overflow-x: hidden;
+      }
+      body.intro-open {
+        overflow: hidden;
+      }
+      button,
+      a {
+        -webkit-tap-highlight-color: transparent;
+      }
+      button {
+        font: inherit;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      /* CINEMATIC OPENING */
+      .intro {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        background: radial-gradient(
+          ellipse at 50% 45%,
+          #4a050b 0%,
+          #1a0507 35%,
+          #050505 75%
+        );
+        transition:
+          opacity 0.9s ease,
+          visibility 0.9s ease;
+      }
+      .intro::before,
+      .intro::after {
+        content: "";
+        position: absolute;
+        inset: -40%;
+        pointer-events: none;
+      }
+      .intro::before {
+        background: conic-gradient(
+          from 0deg,
+          transparent,
+          #e5091420,
+          transparent,
+          #ff1b2d17,
+          transparent
+        );
+        animation: orbit 12s linear infinite;
+      }
+      .intro::after {
+        inset: 0;
+        background:
+          linear-gradient(90deg, #000b, transparent 45%, #000b),
+          linear-gradient(0deg, #000c, transparent 50%, #0009);
+      }
+      .intro.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      .intro-content {
+        z-index: 1;
+        position: relative;
+        text-align: center;
+        width: min(90%, 760px);
+        padding: 30px 12px;
+        animation: introRise 1.2s ease both;
+      }
+      .intro-kicker {
+        color: #ff737a;
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.45em;
+        text-transform: uppercase;
+        margin-bottom: 24px;
+      }
+      .intro-logo {
+        font-weight: 900;
+        color: var(--red);
+        letter-spacing: -0.06em;
+        font-size: clamp(2.8rem, 10vw, 6.6rem);
+        text-shadow: 0 0 28px #e5091450;
+        line-height: 1;
+      }
+      .intro-rule {
+        width: 0;
+        height: 3px;
+        background: var(--red);
+        margin: 24px auto;
+        box-shadow: 0 0 22px var(--red);
+        animation: ruleGrow 1s 0.45s ease forwards;
+      }
+      .intro-title {
+        font-size: clamp(1.5rem, 5vw, 3.2rem);
+        letter-spacing: 0.02em;
+        margin-bottom: 12px;
+      }
+      .intro-subtitle {
+        color: #d2c8c8;
+        line-height: 1.8;
+        font-size: clamp(0.9rem, 2.5vw, 1.08rem);
+      }
+      .intro-actions {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 30px;
+      }
+      .btn {
+        border: 0;
+        border-radius: 4px;
+        padding: 13px 20px;
+        font-weight: 700;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          background 0.2s;
+      }
+      .btn:hover {
+        transform: scale(1.04);
+      }
+      .btn-primary {
+        background: #fff;
+        color: #111;
+      }
+      .btn-primary:hover {
+        background: #e7e7e7;
+      }
+      .btn-secondary {
+        color: #fff;
+        background: #555b;
+      }
+      .btn-secondary:hover {
+        background: #666b;
+      }
+      .intro-note {
+        margin-top: 24px;
+        color: #8d7779;
+        font-size: 0.75rem;
+      }
+      .skip-intro {
+        position: absolute;
+        z-index: 2;
+        top: 22px;
+        right: 22px;
+        background: #ffffff12;
+        border: 1px solid #ffffff40;
+        color: #fff;
+        padding: 9px 13px;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+      @keyframes orbit {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes introRise {
+        from {
+          opacity: 0;
+          transform: translateY(24px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      @keyframes ruleGrow {
+        to {
+          width: min(240px, 55vw);
+        }
+      }
+
+      /* NAVIGATION + HERO */
+      nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 5%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 5;
+        background: linear-gradient(#000b, transparent);
+      }
+      .logo {
+        color: var(--red);
+        font-size: clamp(20px, 3vw, 29px);
+        font-weight: 900;
+        letter-spacing: -1px;
+      }
+      .nav-links {
+        display: flex;
+        gap: clamp(10px, 2vw, 22px);
+        align-items: center;
+      }
+      .nav-links a {
+        font-size: 14px;
+        color: #eee;
+      }
+      .nav-links a:hover {
+        color: #aaa;
+      }
+      .hero {
+        min-height: 650px;
+        display: flex;
+        align-items: center;
+        padding: 125px 6% 80px;
+        background:
+          linear-gradient(
+            90deg,
+            #141414 0%,
+            #141414e8 32%,
+            #14141448 75%,
+            #1414142b 100%
+          ),
+          linear-gradient(0deg, #141414 0%, transparent 40%),
+          url("Wedding.jpg") center 0% / cover;
+      }
+      .hero-content {
+        max-width: 590px;
+        animation: introRise 0.8s ease both;
+      }
+      .tag {
+        color: var(--red);
+        font-weight: 800;
+        letter-spacing: 0.32em;
+        font-size: 0.78rem;
+        margin-bottom: 16px;
+      }
+      h1 {
+        font-size: clamp(44px, 7.4vw, 82px);
+        line-height: 1.02;
+        margin-bottom: 20px;
+      }
+      .meta {
+        color: #ddd;
+        font-size: 14px;
+        margin: 18px 0;
+      }
+      .description {
+        color: #e1e1e1;
+        line-height: 1.8;
+        font-size: 16px;
+        max-width: 490px;
+      }
+      .buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 25px;
+      }
+      section {
+        padding: 26px 5%;
+      }
+      .section-title {
+        font-size: clamp(20px, 3vw, 25px);
+        margin-bottom: 19px;
+      }
+      .events {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+      .event-badge {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 5px 8px;
+        border-radius: 3px;
+        background: #e50914;
+        color: #fff;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin: 20px 0;
+        text-align: left;
+      }
+      .detail-item {
+        background: #151515;
+        border: 1px solid #383838;
+        border-radius: 6px;
+        padding: 12px;
+      }
+      .detail-item strong {
+        display: block;
+        color: #ff535c;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 6px;
+      }
+      .detail-item span {
+        color: #f1f1f1;
+        font-size: 13px;
+        line-height: 1.6;
+        overflow-wrap: anywhere;
+      }
+      .modal-box .event-message {
+        margin-top: 12px;
+      }
+      .map-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        margin-top: 9px;
+        padding: 9px 12px;
+        border: 1px solid #e50914;
+        border-radius: 4px;
+        color: #fff;
+        background: #e5091420;
+        font-size: 12px;
+        font-weight: 700;
+        transition:
+          background 0.2s,
+          transform 0.2s;
+      }
+      .map-link:hover {
+        background: #e5091440;
+        transform: translateY(-1px);
+      }
+      @media (max-width: 520px) {
+        .detail-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .event {
+        position: relative;
+        border-radius: 6px;
+        overflow: hidden;
+        background: #252525;
+        cursor: pointer;
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+      }
+      .event:hover,
+      .event:focus-visible {
+        transform: translateY(-5px) scale(1.025);
+        box-shadow: 0 12px 30px #0009;
+        z-index: 2;
+        outline: none;
+      }
+      /* .event img {
+        display: flex;
+        width: 100%;
+        height: 205px;
+        object-fit: cover;
+        object-position: center;
+        transition: filter 0.3s;
+      } */
+
+      .event img {
+        display: block;
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        object-position: center;
+        background-color: yellow;
+        transition: transform 0.4s ease;
+      }
+
+      .event:hover img {
+        filter: brightness(0.75);
+      }
+      .event-info {
+        padding: 14px;
+      }
+      .event-info h3 {
+        font-size: 16px;
+        margin-bottom: 8px;
+      }
+      .event-info p {
+        font-size: 13px;
+        color: #aaa;
+        line-height: 1.5;
+      }
+      .photo-strip {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+      }
+      /* FAQ cards */
+      .faq-intro {
+        color: #aaa;
+        line-height: 1.7;
+        margin: -8px 0 20px;
+        font-size: 14px;
+      }
+      .faq-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .faq-card {
+        background: linear-gradient(145deg, #252525, #1b1b1b);
+        border: 1px solid #383838;
+        border-left: 3px solid var(--red);
+        border-radius: 7px;
+        overflow: hidden;
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
+      }
+      .faq-card:hover {
+        border-color: #666;
+        transform: translateY(-2px);
+      }
+      .faq-card details {
+        width: 100%;
+      }
+      .faq-card summary {
+        list-style: none;
+        cursor: pointer;
+        padding: 18px 44px 18px 17px;
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 1.5;
+        position: relative;
+      }
+      .faq-card summary::-webkit-details-marker {
+        display: none;
+      }
+      .faq-card summary::after {
+        content: "+";
+        position: absolute;
+        right: 17px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--red);
+        font-size: 25px;
+        font-weight: 400;
+      }
+      .faq-card details[open] summary::after {
+        content: "−";
+      }
+      .faq-answer {
+        padding: 0 17px 18px;
+        color: #bbb;
+        font-size: 13px;
+        line-height: 1.8;
+      }
+      .faq-answer a {
+        color: #ff737a;
+        text-decoration: underline;
+      }
+      .faq-edit-note {
+        margin-top: 16px;
+        color: #777;
+        font-size: 12px;
+        line-height: 1.7;
+      }
+      .photo-card {
+        border: 0;
+        padding: 0;
+        border-radius: 6px;
+        overflow: hidden;
+        background: #222;
+        color: white;
+        text-align: left;
+        cursor: pointer;
+        transition: transform 0.25s;
+      }
+      .photo-card:hover {
+        transform: scale(1.035);
+      }
+      .photo-card img {
+        width: 100%;
+        height: 190px;
+        display: block;
+        object-fit: cover;
+      }
+      .photo-card span {
+        display: block;
+        padding: 10px;
+        font-size: 13px;
+      }
+      .countdown {
+        margin: 35px 5%;
+        padding: 34px 20px;
+        text-align: center;
+        border: 1px solid #393939;
+        border-radius: 10px;
+        background: radial-gradient(ellipse at top, #351014, #171717 70%);
+      }
+      .countdown h2 {
+        margin-bottom: 13px;
+      }
+      #timer {
+        color: #ff2633;
+        font-size: clamp(22px, 4.5vw, 38px);
+        font-weight: 800;
+        margin-top: 18px;
+        font-variant-numeric: tabular-nums;
+      }
+      footer {
+        text-align: center;
+        color: #888;
+        padding: 35px 15px;
+        line-height: 2;
+        font-size: 13px;
+      }
+      footer h2 {
+        color: var(--red);
+        margin-bottom: 8px;
+      }
+
+      /* MODAL + PHOTO VIEWER */
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: #000d;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        z-index: 50;
+      }
+      .modal.show {
+        display: flex;
+        animation: fadeIn 0.25s ease;
+      }
+      .modal-box {
+        width: 100%;
+        max-width: 560px;
+        max-height: 90vh;
+        overflow: auto;
+        background: #202020;
+        border-radius: 9px;
+        padding: 32px;
+        position: relative;
+        text-align: center;
+        border: 1px solid #444;
+      }
+      .modal-box h2 {
+        color: var(--red);
+        margin-bottom: 18px;
+      }
+      .modal-box p {
+        color: #ddd;
+        line-height: 1.9;
+        margin-bottom: 12px;
+      }
+      .close {
+        position: absolute;
+        right: 12px;
+        top: 12px;
+        background: #444;
+        color: #fff;
+        border: 0;
+        border-radius: 50%;
+        padding: 7px 11px;
+        cursor: pointer;
+      }
+      .photo-modal-box {
+        max-width: 900px;
+        padding: 14px;
+      }
+      .photo-modal-box img {
+        max-height: 68vh;
+        width: 100%;
+        object-fit: contain;
+        display: block;
+        border-radius: 5px;
+        background: #090909;
+      }
+      .photo-caption {
+        padding: 14px 8px 5px;
+        color: #eee;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @media (max-width: 850px) {
+        .events {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .photo-strip {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .faq-grid {
+          grid-template-columns: 1fr;
+        }
+        .hero {
+          min-height: 600px;
+          background-position: 60% center;
+        }
+      }
+      @media (max-width: 520px) {
+        nav {
+          padding: 16px 4%;
+        }
+        .nav-links {
+          gap: 10px;
+        }
+        .nav-links a {
+          font-size: 11px;
+        }
+        .hero {
+          min-height: 620px;
+          padding: 110px 5% 65px;
+          background-position: 58% center;
+        }
+        .description {
+          font-size: 14px;
+        }
+        .event img {
+          height: 150px;
+        }
+        .event-info {
+          padding: 10px;
+        }
+        .event-info h3 {
+          font-size: 14px;
+        }
+        .photo-strip {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .photo-card img {
+          height: 175px;
+        }
+        .modal-box {
+          padding: 30px 18px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      /* =========================
+   BRIDE & GROOM FAMILIES
+   ========================= */
+      .families-section {
+        padding: 58px 6%;
+        background: linear-gradient(
+          180deg,
+          #141414 0%,
+          #211416 50%,
+          #141414 100%
+        );
+        text-align: center;
+      }
+      .families-intro {
+        max-width: 720px;
+        margin: -7px auto 30px;
+        color: #c4c4c4;
+        line-height: 1.8;
+        font-size: 14px;
+      }
+      .families-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+      .family-card {
+        position: relative;
+        overflow: hidden;
+        padding: 30px 24px;
+        background: linear-gradient(145deg, #292020, #1b1b1b);
+        border: 1px solid #493034;
+        border-radius: 12px;
+        transition:
+          transform 0.3s ease,
+          border-color 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+      .family-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          #e50914,
+          #ffb8bc,
+          transparent
+        );
+      }
+      .family-card:hover {
+        transform: translateY(-5px);
+        border-color: #e50914;
+        box-shadow: 0 12px 32px #0005;
+      }
+      .family-icon {
+        display: inline-grid;
+        place-items: center;
+        width: 68px;
+        height: 68px;
+        margin-bottom: 12px;
+        border-radius: 50%;
+        background: #e509141c;
+        border: 1px solid #e509144f;
+        font-size: 34px;
+      }
+      .family-card h3 {
+        margin: 0 0 16px;
+        color: #ff646c;
+        font-size: 22px;
+      }
+      .family-role {
+        margin: 0 0 12px;
+        color: #aaa;
+        font-size: 13px;
+      }
+      .family-card h4 {
+        margin: 13px 0;
+        font-size: 19px;
+        font-weight: 600;
+        font-family: emoji;
+      }
+      .family-extra {
+        margin-top: 18px;
+        color: #c3c3c3;
+        font-size: 13px;
+        line-height: 1.9;
+      }
+      .family-blessing {
+        margin: 28px auto 0;
+        color: #ffb8bc;
+        font-size: 15px;
+        line-height: 1.8;
+      }
+      @media (max-width: 600px) {
+        .families-section {
+          padding: 44px 5%;
+        }
+        .families-grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        .family-card {
+          padding: 26px 18px;
+        }
+      }
+    </style>
+  </head>
+  <body class="intro-open">
+    <!-- CINEMATIC INTRO: edit the title and subtitle below -->
+    <div
+      class="intro"
+      id="intro"
+      role="dialog"
+      aria-label="Wedding invitation opening"
+    >
+      <button class="skip-intro" onclick="enterSite()">Skip intro ↗</button>
+      <div class="intro-content">
+        <div class="intro-kicker">A special invitation presents</div>
+        <div class="intro-logo">WEDDINGFLIX</div>
+        <div class="intro-rule"></div>
+        <h2 class="intro-title">A Love Story Begins</h2>
+        <p class="intro-subtitle">
+          Two hearts. Two families. One forever.<br />
+          You're invited to celebrate our next chapter.
+        </p>
+        <div class="intro-actions">
+          <button class="btn btn-primary" onclick="enterSite()">
+            ▶ Enter Invitation
+          </button>
+          <button class="btn btn-secondary" onclick="enterSite()">
+            Discover Our Story
+          </button>
+        </div>
+        <p class="intro-note">A once-in-a-lifetime premiere · Made with love</p>
+      </div>
+    </div>
+
+    <nav>
+      <a class="logo" href="#home" aria-label="WeddingFlix home">WEDDINGFLIX</a>
+      <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#families">Families</a>
+        <a href="#events">Events</a>
+        <a href="#moments">Our Moments</a>
+        <a href="#faqs">FAQs</a>
+      </div>
+    </nav>
+
+    <header class="hero" id="home">
+      <div class="hero-content">
+        <div class="tag">WEDDINGFLIX ORIGINAL</div>
+        <h1 id="heroTitle">Our Love<br />Story ❤️</h1>
+        <div class="meta">
+          Romance &nbsp; • &nbsp; Family &nbsp; • &nbsp; Forever
+        </div>
+        <p class="description">
+          Two hearts, two families, and one beautiful beginning. Join us as we
+          celebrate the most special chapter of our lives. Our forever starts
+          here!
+        </p>
+        <div class="buttons">
+          <button class="btn btn-primary" onclick="openModal('invite')">
+            ▶ Play Our Story
+          </button>
+          <button class="btn btn-secondary" onclick="goToEvents()">
+            ⓘ More Info
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <section
+      id="families"
+      class="families-section"
+      aria-labelledby="familiesTitle"
+    >
+      <h2 class="section-title" id="familiesTitle">
+        Two Families, One Beautiful Beginning ❤️
+      </h2>
+      <p class="families-intro">
+        With the love, support, and blessings of our families, we invite you to
+        celebrate the beginning of our forever.
+      </p>
+
+      <div class="families-grid">
+        <article class="family-card">
+          <div class="family-icon" aria-hidden="true">👰</div>
+          <h3>Bride's Family</h3>
+          <p class="family-role">Beloved daughter of</p>
+          <h4>Late Dinesh Shrivastav</h4>
+          <h4>Anita Shrivastav</h4>
+          <div class="family-extra">
+            <div><strong>Grandparents:</strong> Add names here</div>
+            <!-- <div><strong>Brothers / Sisters:</strong> Add names here</div> -->
+            <!-- <div><strong>Family:</strong> Add family surname here</div> -->
+          </div>
+        </article>
+
+        <article class="family-card">
+          <div class="family-icon" aria-hidden="true">🤵</div>
+          <h3>Groom's Family</h3>
+          <p class="family-role">Beloved son of</p>
+          <h4>Bishwa Ranjan</h4>
+          <h4>Dolly Ranjan</h4>
+          <div class="family-extra">
+            <div><strong>Grandparents:</strong> Add names here</div>
+            <!-- <div><strong>Brothers / Sisters:</strong> Add names here</div> -->
+            <!-- <div><strong>Family:</strong> Add family surname here</div> -->
+          </div>
+        </article>
+      </div>
+
+      <p class="family-blessing">
+        Two families, two traditions, and a lifetime of love. Thank you for
+        being part of our story. ❤️
+      </p>
+    </section>
+
+    <section id="events">
+      <h2 class="section-title">Your Invitation Collection ✨</h2>
+      <p
+        style="
+          color: #aaa;
+          line-height: 1.7;
+          margin: -8px 0 20px;
+          font-size: 14px;
+        "
+      >
+        Tap any event to explore the schedule, venue, dress code and important
+        notes.
+      </p>
+      <div class="events">
+        <article
+          class="event"
+          tabindex="0"
+          role="button"
+          onclick="openModal('haldi')"
+          onkeydown="cardKey(event, 'haldi')"
+        >
+          <img src="Mehndi.jpg" alt="Haldi ceremony celebration" />
+          <div class="event-info">
+            <h3>01. Mehendi & Sangeet</h3>
+            <p>Yellow hues, blessings and laughter.</p>
+            <span class="event-badge">Yellow Theme</span>
+          </div>
+        </article>
+
+        <article
+          class="event"
+          tabindex="0"
+          role="button"
+          onclick="openModal('roka')"
+          onkeydown="cardKey(event, 'roka')"
+        >
+          <img src="images.jpg" alt="Roka ceremony celebration" />
+          <div class="event-info">
+            <h3>02. Tilak</h3>
+            <p>A beautiful first step towards forever.</p>
+            <span class="event-badge">Family Celebration</span>
+          </div>
+        </article>
+        <article
+          class="event"
+          tabindex="0"
+          role="button"
+          onclick="openModal('engagement')"
+          onkeydown="cardKey(event, 'engagement')"
+        >
+          <img src="Haldi.jpg" alt="Haldi Event" />
+          <div class="event-info">
+            <h3>03. Haldi</h3>
+            <p>The beginning of our forever.</p>
+            <span class="event-badge">Haldi Celebration</span>
+          </div>
+        </article>
+
+        <article
+          class="event"
+          tabindex="0"
+          role="button"
+          onclick="openModal('mehendi')"
+          onkeydown="cardKey(event, 'mehendi')"
+        >
+          <img src="Wedding.jpg" alt="Wedding Celebration" />
+          <div class="event-info">
+            <h3>04. Wedding</h3>
+            <p>Intricate designs and happy moments.</p>
+            <span class="event-badge">Saddi ka Time </span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="moments">
+      <h2 class="section-title">
+        Because Every Love Story Deserves a Replay ❤️
+      </h2>
+      <div class="photo-strip" id="photoStrip">
+        <!-- Replace these five sample image URLs with your own photo URLs. -->
+        <button class="photo-card" onclick="openPhoto(0)">
+          <img
+            src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=700&q=80"
+            alt="Couple memory one"
+          />
+          <span>Memory No. 01</span>
+        </button>
+        <button class="photo-card" onclick="openPhoto(1)">
+          <img
+            src="https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&w=700&q=80"
+            alt="Couple memory two"
+          />
+          <span>Memory No. 02</span>
+        </button>
+        <button class="photo-card" onclick="openPhoto(2)">
+          <img
+            src="https://images.unsplash.com/photo-1591604466107-ec97de577aff?auto=format&fit=crop&w=700&q=80"
+            alt="Couple memory three"
+          />
+          <span>Memory No. 03</span>
+        </button>
+        <button class="photo-card" onclick="openPhoto(3)">
+          <img
+            src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=700&q=80"
+            alt="Couple memory four"
+          />
+          <span>Memory No. 04</span>
+        </button>
+        <button class="photo-card" onclick="openPhoto(4)">
+          <img
+            src="https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=700&q=80"
+            alt="Couple memory five"
+          />
+          <span>Memory No. 05</span>
+        </button>
+      </div>
+    </section>
+
+    <div class="countdown" id="countdown">
+      <h2>❤️ The Countdown to Forever</h2>
+      <p>Our most beautiful day is getting closer!</p>
+      <div id="timer" aria-live="polite">Loading countdown…</div>
+    </div>
+
+    <section id="faqs" aria-labelledby="faqTitle">
+      <h2 class="section-title" id="faqTitle">Frequently Asked Questions ❓</h2>
+      <p class="faq-intro">
+        A few helpful details to make your celebration easy and memorable. Tap a
+        question to reveal the answer.
+      </p>
+      <div class="faq-grid">
+        <article class="faq-card">
+          <details>
+            <summary>📅 When and where are the celebrations?</summary>
+            <div class="faq-answer">
+              Please check the individual event cards above for each ceremony's
+              date, time, and venue. We will update any changes here before the
+              celebration.
+            </div>
+          </details>
+        </article>
+        <article class="faq-card">
+          <details>
+            <summary>👗 What should I wear?</summary>
+            <div class="faq-answer">
+              Festive and traditional outfits are welcome. Each event card
+              includes a suggested dress code—for example, yellow or light
+              colours for Haldi and festive party wear for Sangeet. Comfort
+              comes first!
+            </div>
+          </details>
+        </article>
+        <article class="faq-card">
+          <details>
+            <summary>🕒 What time should I arrive?</summary>
+            <div class="faq-answer">
+              Please aim to arrive 15–20 minutes before the ceremony's scheduled
+              start so you can settle in and enjoy the celebrations. Check the
+              event details for the exact timing.
+            </div>
+          </details>
+        </article>
+        <article class="faq-card">
+          <details>
+            <summary>🚗 Is parking or transport available?</summary>
+            <div class="faq-answer">
+              Parking and transport details will be shared once the venue
+              arrangements are confirmed. Please add the parking location,
+              shuttle details, or local directions to the relevant event's
+              notes.
+            </div>
+          </details>
+        </article>
+        <article class="faq-card">
+          <details>
+            <summary>🍽️ Will food and refreshments be served?</summary>
+            <div class="faq-answer">
+              Food and refreshments are planned according to each event's
+              schedule. Please check the event details for meal timings and add
+              any confirmed menu or dietary information here.
+            </div>
+          </details>
+        </article>
+        <article class="faq-card">
+          <details>
+            <summary>📸 Can we take photos and videos?</summary>
+            <div class="faq-answer">
+              Of course! We would love you to capture happy memories. During
+              important rituals, please be considerate of the couple, family,
+              and professional photographers so everyone can enjoy the moment.
+            </div>
+          </details>
+        </article>
+        <article class="faq-card">
+          <details>
+            <summary>🎁 Are gifts expected?</summary>
+            <div class="faq-answer">
+              Your presence, blessings, and good wishes are the greatest gift.
+              If the couple has a preferred gifting arrangement, add those
+              details here.
+            </div>
+          </details>
+        </article>
+        <article class="faq-card">
+          <details>
+            <summary>☎️ Whom should I contact for help?</summary>
+            <div class="faq-answer">
+              For questions about timings, directions, or arrangements, please
+              contact the family wedding coordinator. Add their name and phone
+              number here before sharing the invitation.
+            </div>
+          </details>
+        </article>
+      </div>
+      <p class="faq-edit-note">
+        Personalize these answers before sharing the invitation. Replace general
+        notes with confirmed venue, parking, contact, and meal information.
+      </p>
+    </section>
+
+    <footer>
+      <h2>WEDDINGFLIX</h2>
+      Made with ❤️ for our favourite people.<br />
+      One love. One story. Forever.
+      <br />© Our Wedding Invitation
+    </footer>
+
+    <!-- DETAILS MODAL -->
+    <div
+      class="modal"
+      id="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      onclick="if (event.target === this) closeModal();"
+    >
+      <div class="modal-box">
+        <button class="close" onclick="closeModal()" aria-label="Close">
+          ✕
+        </button>
+        <h2 id="modal-title">Our Love Story</h2>
+        <p id="modal-text"></p>
+        <button class="btn btn-primary" onclick="closeModal()">
+          ❤️ Lovely!
+        </button>
+      </div>
+    </div>
+
+    <!-- FIVE-PHOTO VIEWER -->
+    <div
+      class="modal"
+      id="photoModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="photoCaption"
+      onclick="if (event.target === this) closePhoto();"
+    >
+      <div class="modal-box photo-modal-box">
+        <button class="close" onclick="closePhoto()" aria-label="Close photo">
+          ✕
+        </button>
+        <img id="largePhoto" src="" alt="Selected couple memory" />
+        <div class="photo-caption" id="photoCaption">A beautiful memory ❤️</div>
+        <div class="buttons" style="justify-content: center">
+          <button class="btn btn-secondary" onclick="changePhoto(-1)">
+            ← Previous
+          </button>
+          <button class="btn btn-primary" onclick="changePhoto(1)">
+            Next →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /* =========================
+   PERSONALIZE YOUR WEDDING
+   ========================= */
+
+      // Prevent the browser from restoring the previous scroll position
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "manual";
+      }
+
+      // Start at the top whenever the page loads or reloads
+      window.addEventListener("load", function () {
+        window.scrollTo(0, 0);
+      });
+
+      const wedding = {
+        bride: "Aanchal",
+        groom: "Apurva",
+        // Set this to the wedding date/time in your local timezone: YYYY-MM-DDTHH:MM:SS
+        date: "05 Dec 2026 18:00:00",
+        venue:
+          "Meera Lawns and Banquets, Nirmal Nagar, Petasur Road, Gorewada, Nagpur, Maharashtra 441123",
+        mapsUrl: "https://maps.app.goo.gl/GCNM8yp2U5ezTJhu6?g_st=ac",
+        events: {
+          roka: {
+            title: "🌸 Tilak",
+            date: "04 Dec 2026",
+            time: "1 PM Onwards",
+            venue:
+              "Meera Lawns and Banquets, Nirmal Nagar, Petasur Road, Gorewada, Nagpur, Maharashtra 441123",
+            mapsUrl: "https://maps.app.goo.gl/GCNM8yp2U5ezTJhu6?g_st=ac",
+            dressCode: "Traditional / festive wear",
+            hosts: "Bride's and groom's families",
+            schedule:
+              "Welcome and family introductions · Tilak / Roka rituals · Blessings and refreshments",
+            notes:
+              "Please arrive 15 minutes early. Replace this note with parking or entry information.",
+            message:
+              "With the blessings of our families, we begin a beautiful new chapter. Join us for our Roka ceremony and share the happiness.",
+          },
+          engagement: {
+            title: "💍 Haldi",
+            date: "5 Dec 2026",
+            time: "8 AM Onwards",
+            venue:
+              "Meera Lawns and Banquets, Nirmal Nagar, Petasur Road, Gorewada, Nagpur, Maharashtra 441123",
+            mapsUrl: "https://maps.app.goo.gl/GCNM8yp2U5ezTJhu6?g_st=ac",
+            dressCode: "Festive or semi-formal attire",
+            hosts: "Both families",
+            schedule:
+              "Guest arrival · Ring exchange · Family photographs · Dinner / refreshments",
+            notes: "Please keep your phones ready for photos and wishes!",
+            message:
+              "One promise, two hearts, and a lifetime to look forward to. We would love for you to be part of our engagement celebration.",
+          },
+          haldi: {
+            title: "🌿 Mehendi and Sangeet",
+            date: "4 Dec 2026",
+            time: "6 PM Onwards ",
+            venue:
+              "Meera Lawns and Banquets, Nirmal Nagar, Petasur Road, Gorewada, Nagpur, Maharashtra 441123",
+            mapsUrl: "https://maps.app.goo.gl/GCNM8yp2U5ezTJhu6?g_st=ac",
+            dressCode:
+              "Yellow, white or light-coloured clothes you don't mind getting stained",
+            hosts: "Hosted by the family",
+            schedule:
+              "Welcome · Haldi rituals · Music and photos · Snacks and refreshments",
+            notes:
+              "The ceremony may include turmeric. Wear comfortable clothes and arrive on time for the rituals.",
+            message:
+              "A splash of yellow, a shower of blessings, and lots of laughter. Come celebrate this joyful tradition with us!",
+          },
+          mehendi: {
+            title: "🌿 Wedding",
+            date: "05 Dec 2026",
+            time: "6:00 PM Onwards",
+            venue:
+              "Meera Lawns and Banquets, Nirmal Nagar, Petasur Road, Gorewada, Nagpur, Maharashtra 441123",
+            mapsUrl: "https://maps.app.goo.gl/GCNM8yp2U5ezTJhu6?g_st=ac",
+            dressCode:
+              "Colourful festive wear; green and floral colours welcome",
+            hosts: "Family and friends",
+            schedule:
+              "Mehendi application · Music · Candid photographs · Light refreshments",
+            notes:
+              "If you would like mehendi applied, allow enough time for the design to dry.",
+            message:
+              "Beautiful patterns, cheerful music and the people we love — join us for a relaxed Mehendi celebration.",
+          },
+          sangeet: {
+            title: "🎶 Sangeet Night",
+            date: "Add day and date",
+            time: "Add guest arrival and show start times",
+            venue:
+              "Meera Lawns and Banquets, Nirmal Nagar, Petasur Road, Gorewada, Nagpur, Maharashtra 441123",
+            mapsUrl: "https://maps.app.goo.gl/GCNM8yp2U5ezTJhu6?g_st=ac",
+            dressCode: "Glamorous festive or party wear",
+            hosts: "The families and their dance stars",
+            schedule:
+              "Guest arrival · Family performances · Couple's moment · Dancing and dinner",
+            notes:
+              "Performers: add names here. For any planned performance, coordinate with the family before the event.",
+            message:
+              "It's time for music, dance, cheers and a night full of memories. Bring your best moves and celebrate with us!",
+          },
+          wedding: {
+            title: "❤️ The Wedding Ceremony",
+            date: "December 10, 2026",
+            time: "6:00 PM (edit this to your actual ceremony time)",
+            venue:
+              "Meera Lawns and Banquets, Nirmal Nagar, Petasur Road, Gorewada, Nagpur, Maharashtra 441123",
+            mapsUrl: "https://maps.app.goo.gl/GCNM8yp2U5ezTJhu6?g_st=ac",
+            dressCode: "Traditional / formal wedding attire",
+            hosts: "Together with our families",
+            schedule:
+              "Guest arrival · Wedding rituals · Blessings and photographs · Dinner (edit to match your plan)",
+            notes:
+              "Please update the venue address, ceremony time and any transport or parking instructions before sharing the invitation.",
+            message:
+              "With the love and blessings of our families, we invite you to witness the beginning of our forever. Your presence will make our day even more special.",
+          },
+          reception: {
+            title: "🥂 Wedding Reception",
+            date: "Add reception date",
+            time: "Add guest arrival time and dinner time",
+            venue:
+              "Meera Lawns and Banquets, Nirmal Nagar, Petasur Road, Gorewada, Nagpur, Maharashtra 441123",
+            mapsUrl: "https://maps.app.goo.gl/GCNM8yp2U5ezTJhu6?g_st=ac",
+            dressCode: "Formal or festive attire",
+            hosts: "The newlyweds and their families",
+            schedule:
+              "Welcome and greetings · Couple photographs · Dinner · Celebration",
+            notes:
+              "Please add RSVP details, parking information or any guest instructions here.",
+            message:
+              "Join us as we celebrate our new beginning. We look forward to greeting you, sharing a meal and making wonderful memories together.",
+          },
+        },
+      };
+
+      /* Intro: no autoplay sound; guests choose to enter. */
+      function enterSite() {
+        const intro = document.getElementById("intro");
+        intro.classList.add("hidden");
+        document.body.classList.remove("intro-open");
+        window.setTimeout(() => {
+          intro.style.display = "none";
+        }, 950);
+      }
+
+      /* Let keyboard users activate event cards. */
+      function cardKey(event, type) {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          if (type === "moments") goToMoments();
+          else openModal(type);
+        }
+      }
+
+      function goToEvents() {
+        document
+          .getElementById("events")
+          .scrollIntoView({ behavior: "smooth" });
+      }
+      function goToMoments() {
+        document
+          .getElementById("moments")
+          .scrollIntoView({ behavior: "smooth" });
+      }
+
+      function escapeHTML(value) {
+        return String(value).replace(
+          /[&<>"']/g,
+          (char) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[char],
+        );
+      }
+
+      function openModal(type) {
+        const title = document.getElementById("modal-title");
+        const text = document.getElementById("modal-text");
+        if (type === "invite") {
+          title.textContent = "❤️ You're Invited!";
+          text.innerHTML =
+            "<strong>" +
+            escapeHTML(wedding.bride) +
+            " &amp; " +
+            escapeHTML(wedding.groom) +
+            "</strong><br><br>" +
+            "Request the pleasure of your company as we begin our forever.<br><br>" +
+            "📅 " +
+            escapeHTML(new Date(wedding.date).toLocaleString()) +
+            "<br>📍 " +
+            escapeHTML(wedding.venue) +
+            `<br><a class="map-link" href="${escapeHTML(wedding.mapsUrl)}" target="_blank" rel="noopener noreferrer">📍 Open venue in Google Maps ↗</a>`;
+        } else {
+          const item = wedding.events[type];
+          if (!item) return;
+          title.textContent = item.title;
+          text.innerHTML = `<p class="event-message">${escapeHTML(item.message)}</p>
+      <div class="detail-grid">
+        <div class="detail-item"><strong>📅 Date</strong><span>${escapeHTML(item.date || "Add date")}</span></div>
+        <div class="detail-item"><strong>🕒 Time</strong><span>${escapeHTML(item.time || "Add time")}</span></div>
+        <div class="detail-item"><strong>📍 Venue</strong><span>${escapeHTML(item.venue || "Add venue")}${item.mapsUrl ? `<br><a class="map-link" href="${escapeHTML(item.mapsUrl)}" target="_blank" rel="noopener noreferrer">Open in Google Maps ↗</a>` : ""}</span></div>
+        <div class="detail-item"><strong>👗 Dress code</strong><span>${escapeHTML(item.dressCode || "Festive attire")}</span></div>
+        <div class="detail-item"><strong>🤍 Hosted by</strong><span>${escapeHTML(item.hosts || "Our families")}</span></div>
+        <div class="detail-item"><strong>✨ Schedule</strong><span>${escapeHTML(item.schedule || "Details to be announced")}</span></div>
+      </div>
+      <p><strong>Good to know:</strong> ${escapeHTML(item.notes || "We look forward to celebrating with you!")}</p>`;
+        }
+        document.getElementById("modal").classList.add("show");
+        document.body.style.overflow = "hidden";
+      }
+      function closeModal() {
+        document.getElementById("modal").classList.remove("show");
+        restoreBodyScroll();
+      }
+
+      /* Photo viewer: update this list with your five image URLs and captions. */
+      const photos = [
+        {
+          src: "images.jpg",
+          caption:
+            "Memory No. 01 — The beginning ❤️ Lorem ipsum, dolor sit amet consectetur adipisicing elit. ",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&w=1400&q=85",
+          caption: "Memory No. 02 — A moment to remember",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1591604466107-ec97de577aff?auto=format&fit=crop&w=1400&q=85",
+          caption: "Memory No. 03 — Together is our favourite place",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=1400&q=85",
+          caption: "Memory No. 04 — Smiles that say it all",
+        },
+        {
+          src: "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=1400&q=85",
+          caption: "Memory No. 05 — Forever starts here",
+        },
+      ];
+      let currentPhoto = 0;
+
+      function openPhoto(index) {
+        currentPhoto = index;
+        renderPhoto();
+        document.getElementById("photoModal").classList.add("show");
+        document.body.style.overflow = "hidden";
+      }
+      function renderPhoto() {
+        const photo = photos[currentPhoto];
+        document.getElementById("largePhoto").src = photo.src;
+        document.getElementById("photoCaption").textContent = photo.caption;
+      }
+      function changePhoto(direction) {
+        currentPhoto =
+          (currentPhoto + direction + photos.length) % photos.length;
+        renderPhoto();
+      }
+      function closePhoto() {
+        document.getElementById("photoModal").classList.remove("show");
+        restoreBodyScroll();
+      }
+      function restoreBodyScroll() {
+        const anyOpen = document.querySelector(".modal.show");
+        if (
+          !anyOpen &&
+          !document.getElementById("intro").classList.contains("hidden")
+        )
+          return;
+        if (!anyOpen) document.body.style.overflow = "";
+      }
+
+      /* Countdown uses the visitor's local timezone. */
+      function updateTimer() {
+        const target = new Date(wedding.date).getTime();
+        const timer = document.getElementById("timer");
+        if (Number.isNaN(target)) {
+          timer.textContent = "Please set a valid wedding date";
+          return;
+        }
+        const difference = target - Date.now();
+        if (difference <= 0) {
+          timer.textContent = "Our forever has begun! ❤️";
+          return;
+        }
+        const days = Math.floor(difference / 86400000);
+        const hours = Math.floor((difference % 86400000) / 3600000);
+        const minutes = Math.floor((difference % 3600000) / 60000);
+        const seconds = Math.floor((difference % 60000) / 1000);
+        timer.textContent = `${days} Days  ${hours} Hours  ${minutes} Min  ${seconds} Sec`;
+      }
+      updateTimer();
+      setInterval(updateTimer, 1000);
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          closeModal();
+          closePhoto();
+          if (!document.getElementById("intro").classList.contains("hidden"))
+            enterSite();
+        }
+        if (document.getElementById("photoModal").classList.contains("show")) {
+          if (event.key === "ArrowRight") changePhoto(1);
+          if (event.key === "ArrowLeft") changePhoto(-1);
+        }
+      });
+    </script>
+  </body>
+</html>
